@@ -27,7 +27,7 @@
                 </a>
                     
                 <ul class="dropdown-menu">
-                {% for subcategory in subcategories %}
+                {% for subcategory in category.subcategory.all %}
                 
                 <li><a class="dropdown-item" href="#">{{subcategory.name}}</a></li>
                 
@@ -55,7 +55,7 @@
         <h2>{{subcategory.name}}</h2>
 
         <div class="row">
-            {% for product in products %}
+            {% for product in subcategory.product.all %}
             <div class="items col-sm-3 mb-3 mb-sm-0">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">

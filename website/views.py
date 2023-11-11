@@ -5,6 +5,7 @@ from . models import Category, SubCategory, Products
 def home(request):
     categories = Category.objects.all()
     subcategories = SubCategory.objects.all()
+    print(subcategories.values())
     products = Products.objects.all()
     data = {
         'categories':categories,
