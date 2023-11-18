@@ -38,7 +38,7 @@
               {% endfor %}
 
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'cart' %}">CART</a>
+                <a class="nav-link active" aria-current="page" href="#">CART</a>
               </li>
               
 
@@ -53,23 +53,24 @@
     <!--Navbar Ends-->
 
     <div class = "products_page container-fluid">
-        <h1>{{temp.name}}</h1>
+        <h1>CART</h1>
         <hr>
-
+        
         <div class="row">
-            {% for product in products %}
+            {% for item in order_items %}
             <div class="items col-sm-3 mb-3 mb-sm-0">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
-                      <h5 class="card-title">{{product.name}}</h5>
-                      <p class="card-text">${{product.price}}</p>
-                      <a href="{{product.get_add_to_cart_url}}" class="btn btn-primary">Add to Cart</a>
+                      <h5 class="card-title">{{item.product.name}}</h5>
+                      <p class="card-text">${{item.product.price}}</p>
+                      <p class="card-text">{{item.quantity}}</p>
+                      <a href="{{item.get_delete_cart_item_url}}" class="btn btn-primary">Remove Item</a>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-        
+            
     </div>
     
 

@@ -29,13 +29,17 @@
                 <ul class="dropdown-menu">
                 {% for subcategory in category.subcategory.all %}
                 
-                <li><a class="dropdown-item" href="{% url 'subpage' %}">{{subcategory.name}}</a></li>
+                <li><a class="dropdown-item" href="{{subcategory.get_subppage_url}}">{{subcategory.name}}</a></li>
                 
                 {% endfor %}
                 </ul>
 
               </li>
               {% endfor %}
+
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'cart' %}">CART</a>
+              </li>
               
 
             </ul>
@@ -61,13 +65,12 @@
                     <div class="card-body">
                       <h5 class="card-title">{{product.name}}</h5>
                       <p class="card-text">${{product.price}}</p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                      <a href="{{product.get_add_to_cart_url}}" class="btn btn-primary">Add to Cart</a>
                     </div>
                 </div>
             </div>
             {% endfor %}
-        </div>
-            
+        </div> 
 
         {% endfor %}
       </div>
