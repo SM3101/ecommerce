@@ -8,27 +8,26 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
-class SubCategory(models.Model):
-    name = models.CharField(max_length=20)
-    category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE, related_name="subcategory")
+    def get_page_url(self):
+        return reverse("category", kwargs={'id':self.id})
+    
 
-    def __str__(self):
-        return self.name
-    
-    def get_subppage_url(self):
-        return reverse("subpage", kwargs={'id':self.id})
-    
 class Products(models.Model):
     name = models.CharField(max_length=20)
     price = models.FloatField()
-    image = models.ImageField()
-    subcategory = models.ForeignKey(SubCategory, null=True, on_delete=models.CASCADE, related_name="product")
+    image = models.ImageField(upload_to="product.image/")
+    description = models.CharField(max_length=50, default="")
+    background_image = models.ImageField(upload_to="product.image/", default=False)
+    category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE, related_name="product")
 
     def __str__(self):
         return self.name
     
     def get_add_to_cart_url(self):
         return reverse("add_to_cart", kwargs={'id':self.id})
+    
+    def get_info_url(self):
+        return reverse("item_info", kwargs={'id':self.id})
     
 class OrderItem(models.Model):
     product = models.ForeignKey(Products, null=True, on_delete=models.CASCADE, related_name="order_item")

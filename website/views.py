@@ -1,32 +1,41 @@
 from django.shortcuts import render, redirect
-from . models import Category, SubCategory, Products, OrderItem
+from . models import Category, Products, OrderItem
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 # Create your views here.
 def home(request):
     categories = Category.objects.all()
-    subcategories = SubCategory.objects.all()
-    #print(subcategories.values())
     products = Products.objects.all()
     data = {
         'categories':categories,
-        'subcategories':subcategories,
         'products':products,
     }
     return render(request, 'homepage.html', data)
 
-def subcategory_display(request, id):
+def category_display(request, id):
     categories = Category.objects.all()
-    subcategory_show = SubCategory.objects.all()
-    #print(subcategories.values())
-    temp_sub = SubCategory.objects.get(id=id)
-    products = Products.objects.filter(subcategory=temp_sub)
+    category = Category.objects.get(id=id)
+    products = Products.objects.filter(category=category)
     data = {
         'categories':categories,
-        'subcategories':subcategory_show,
         'products':products,
-        'temp':temp_sub,
+        'category':category
     }
-    return render(request, 'subpage.html', data)
+    return render(request, 'category.html', data)
+
+def shop_display(request):
+    categories = Category.objects.all()
+    ear_products = Products.objects.filter(category__name="Earphones")
+    head_products = Products.objects.filter(category__name="Headphones")
+    speaker_products = Products.objects.filter(category__name="Speakers")
+    data = {
+        'categories':categories,
+        'ear_products':ear_products,
+        'head_products':head_products,
+        'speaker_products':speaker_products,
+    }
+    return render(request, 'shop.html', data)
 
 def add_to_cart(request, id):
     product_item = Products.objects.get(id=id)
@@ -36,12 +45,10 @@ def add_to_cart(request, id):
 
 def cart(request):
     categories = Category.objects.all()
-    subcategories = SubCategory.objects.all()
     order_items = OrderItem.objects.all()
     data = {
         'order_items':order_items,
         'categories':categories,
-        'subcategories':subcategories,
     }
     return render(request, 'cart.html', data)
 
@@ -49,3 +56,24 @@ def delete_cart_item(request, id):
     order_item = OrderItem.objects.get(id=id)
     order_item.delete()
     return redirect(cart)
+
+def item_info(request, id):
+    item = Products.objects.get(id=id)
+    categories = Category.objects.all()
+    data={
+        'product':item,
+        'categories':categories,
+    }
+    return render(request, "product_info.html", data)
+
+@csrf_exempt
+def quantity(request):
+    id = request.POST['id']
+    type_val = request.POST['type']
+    item = OrderItem.objects.get(product__id=int(id))
+    if type_val == 'inc':
+        item.quantity += 1
+    else:
+        item.quantity -= 1
+    item.save()
+    return JsonResponse({"status": "true", "quantity": item.quantity, "product_id": id})
