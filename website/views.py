@@ -2,10 +2,15 @@ from django.shortcuts import render, redirect
 from . models import Category, Products, OrderItem
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.urls import reverse
 
 # Create your views here.
 def home(request):
     categories = Category.objects.all()
+    if request.POST:
+        productname = request.POST['product_search']
+        return redirect("search", productname=productname)
+    
     products = Products.objects.all()
     data = {
         'categories':categories,
@@ -13,8 +18,16 @@ def home(request):
     }
     return render(request, 'homepage.html', data)
 
+
+
+
+
 def category_display(request, id):
     categories = Category.objects.all()
+    if request.POST:
+        productname = request.POST['product_search']
+        return redirect("search", productname=productname)
+    
     category = Category.objects.get(id=id)
     products = Products.objects.filter(category=category)
     data = {
@@ -24,8 +37,19 @@ def category_display(request, id):
     }
     return render(request, 'category.html', data)
 
+
+
+
+
+
+
+
 def shop_display(request):
     categories = Category.objects.all()
+    if request.POST:
+        productname = request.POST['product_search']
+        return redirect("search", productname=productname)
+    
     ear_products = Products.objects.filter(category__name="Earphones")
     head_products = Products.objects.filter(category__name="Headphones")
     speaker_products = Products.objects.filter(category__name="Speakers")
@@ -45,6 +69,10 @@ def add_to_cart(request, id):
 
 def cart(request):
     categories = Category.objects.all()
+    if request.POST:
+        productname = request.POST['product_search']
+        return redirect("search", productname=productname)
+    
     order_items = OrderItem.objects.all()
     data = {
         'order_items':order_items,
@@ -60,11 +88,48 @@ def delete_cart_item(request, id):
 def item_info(request, id):
     item = Products.objects.get(id=id)
     categories = Category.objects.all()
+    if request.POST:
+        productname = request.POST['product_search']
+        return redirect("search", productname=productname)
+    
     data={
         'product':item,
         'categories':categories,
     }
     return render(request, "product_info.html", data)
+
+def search(request, productname):
+    if request.POST:
+        productname = request.POST['product_search']
+        return redirect("search", productname=productname)
+    
+    categories = Category.objects.all()
+    baseproducts = Products.objects.filter(name__icontains=productname)
+    catproducts = Products.objects.filter(category__name__icontains=productname)
+
+    if baseproducts.count() > 0:
+        data = {
+            'products': baseproducts,
+            'categories':categories,
+            'productname': productname,
+            'productnum': baseproducts.count()
+        }
+    elif catproducts.count() > 0:
+        data = {
+            'products': catproducts,
+            'categories':categories,
+            'productname': productname,
+            'productnum': catproducts.count()
+        }
+    else:
+        data = {
+            'categories':categories,
+            'productname': productname,
+            'productnum': 0
+        }
+        
+    return render(request, 'search.html', data)
+
 
 @csrf_exempt
 def quantity(request):
@@ -77,3 +142,4 @@ def quantity(request):
         item.quantity -= 1
     item.save()
     return JsonResponse({"status": "true", "quantity": item.quantity, "product_id": id})
+

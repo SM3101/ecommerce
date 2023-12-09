@@ -103,37 +103,54 @@
 
 
 
-.second_section{
-    background-color: lime;
-}
+
 
 .second_display{
     display:flex;
-    justify-content: space-around;
-    padding-top: 50px;
-    padding-bottom: 50px;
 }
 
 .display_one{
-    background-color: lime;
+    background-image: url(/media/home_pictures/homeheadphones.avif);
+    background-size: cover;
     display:flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    align-items: end;
+    width: 33.3%;
+    height: 475px;
+}
+
+.display_one a{
+    margin-bottom: 45px;
 }
 
 .display_two{
-    background-color: lime;
+    background-image: url(/media/home_pictures/homeearphones.avif);
+    background-size: cover;
     display:flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    align-items: end;
+    width: 33.3%;
+    height: 475px;
+}
+
+.display_two a{
+    margin-bottom: 45px;
 }
 
 .display_three{
-    background-color: lime;
+    background-image: url(/media/home_pictures/homespeakers.avif);
+    background-size: cover;
     display:flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
+    align-items: end;
+    width: 33.4%;
+    height: 475px;
 }
+
+.display_three a{
+    margin-bottom: 45px;
+}
+
 
 .display_title{
     margin-top: 20px;
